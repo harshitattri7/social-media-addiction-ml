@@ -127,3 +127,11 @@ This project demonstrates how behavioral indicators can effectively predict high
 The Random Forest model achieved strong generalization performance and revealed that academic impact and social conflicts are stronger predictors than raw usage time alone.
 
 The project follows proper machine learning practices including data cleaning, leakage prevention, stratified validation, model comparison, and overfitting control.
+
+## 📚 Sources
+
+- Dataset: [Social Media Addiction Dataset](https://www.kaggle.com/datasets/...)
+
+- Scikit-learn Documentation: https://scikit-learn.org/
+- Matplotlib Documentation: https://matplotlib.org/
+- Pandas Documentation: https://pandas.pydata.org/
