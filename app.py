@@ -16,6 +16,20 @@ st.title("📱 Social Media Addiction Risk Assessment")
 st.write("Answer honestly to assess your behavioral risk.")
 
 # organize content into tabs
+# apply CSS to make the Model Insights tab stand out
+st.markdown(
+    """
+    <style>
+    /* highlight second tab label so it pops */
+    div[data-testid="stTabs"] button:nth-child(2) {
+      color: #ff6347;            /* tomato color */
+      font-weight: bold;
+      border-bottom: 2px solid #ff6347;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 tab1, tab2 = st.tabs(["🔍 Risk Assessment", "📊 Model Insights"])
 with tab1:
     # Inputs
