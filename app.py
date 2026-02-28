@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import matplotlib.pyplot as plt
+import numpy as np
 
 model = joblib.load("model.pkl")
 
@@ -51,3 +53,27 @@ if st.button("Check My Risk"):
     else:
         st.success("🟢 Low Risk")
         st.write("### Maintain healthy digital habits!")
+    
+        # Show model feature importances if available
+        try:
+            st.subheader("📊 Model Insights")
+
+            feature_names = [
+                "Daily Usage Hours",
+                "Sleep Hours",
+                "Academic Impact",
+                "Social Conflicts"
+            ]
+
+            importances = model.feature_importances_
+
+            fig, ax = plt.subplots()
+            ax.barh(feature_names, importances)
+            ax.set_xlabel("Importance Score")
+            ax.set_title("Feature Importance")
+
+            st.pyplot(fig)
+        except AttributeError:
+            st.info("Model does not expose feature importances.")
+        except Exception as e:
+            st.error(f"Could not display feature importances: {e}")
