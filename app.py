@@ -12,6 +12,42 @@ model = joblib.load("model.pkl")
 
 st.set_page_config(page_title="Social Media Addiction Risk Assessment")
 
+# ---- SIDEBAR: Model Information ----
+with st.sidebar:
+    st.markdown("## 🤖 Model Information")
+    
+    st.markdown(
+        """
+        **Algorithm:** Random Forest Classifier
+        
+        **Purpose:** Predicts social media addiction risk based on behavioral indicators.
+        
+        **Features Used:**
+        - Daily Usage Hours
+        - Sleep Hours Per Night
+        - Academic Performance Impact
+        - Social Conflicts
+        
+        **Model Details:**
+        - Max Depth: 5
+        - Random State: 42
+        - Multi-class Classification: Binary (High Risk / Low Risk)
+        
+        **Training Data:**
+        - Dataset: Students Social Media Addiction
+        - Target: Addiction Risk Classification
+        - Test Accuracy: ~90.1%
+        
+        **How It Works:**
+        1. Input your behavioral data via sliders and dropdowns
+        2. Model predicts addiction risk probability
+        3. View detailed model insights below (Feature Importance & Confusion Matrix)
+        """
+    )
+    
+    st.markdown("---")
+    st.info("ℹ️ This tool is for educational and awareness purposes only.")
+
 st.title("📱 Social Media Addiction Risk Assessment")
 st.write("Answer honestly to assess your behavioral risk.")
 
