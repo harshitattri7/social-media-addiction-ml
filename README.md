@@ -1,6 +1,6 @@
 # 📱 Social Media Addiction Risk Prediction
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://social-media-addiction-ml.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://harshitattri7-social-media-addiction-ml-app-y4k3k7.streamlit.app)
 
 ## 🚀 Project Overview
 
