@@ -70,69 +70,69 @@ with tab2:
     # ---- Feature Importance ----
     st.subheader("Feature Importance")
 
-feature_names = [
-    "Daily Usage Hours",
-    "Sleep Hours",
-    "Academic Impact",
-    "Social Conflicts"
-]
+    feature_names = [
+        "Daily Usage Hours",
+        "Sleep Hours",
+        "Academic Impact",
+        "Social Conflicts"
+    ]
 
-try:
-    importances = model.feature_importances_
+    try:
+        importances = model.feature_importances_
 
-    fig1, ax1 = plt.subplots()
-    ax1.barh(feature_names, importances)
-    ax1.set_xlabel("Importance Score")
-    ax1.set_title("Feature Importance")
-    st.pyplot(fig1)
-except AttributeError:
-    st.info("Model does not expose feature importances.")
-except Exception as e:
-    st.error(f"Could not display feature importances: {e}")
+        fig1, ax1 = plt.subplots()
+        ax1.barh(feature_names, importances)
+        ax1.set_xlabel("Importance Score")
+        ax1.set_title("Feature Importance")
+        st.pyplot(fig1)
+    except AttributeError:
+        st.info("Model does not expose feature importances.")
+    except Exception as e:
+        st.error(f"Could not display feature importances: {e}")
 
-st.subheader("Confusion Matrix")
+    st.subheader("Confusion Matrix")
 
-try:
-    data = pd.read_csv("Students Social Media Addiction.csv")
+    try:
+        data = pd.read_csv("Students Social Media Addiction.csv")
 
-    data["Affects_Academic_Performance"] = data["Affects_Academic_Performance"].map({"Yes":1,"No":0})
-    data["Conflicts_Over_Social_Media"] = data["Conflicts_Over_Social_Media"].map({"Yes":1,"No":0})
+        data["Affects_Academic_Performance"] = data["Affects_Academic_Performance"].map({"Yes":1,"No":0})
+        data["Conflicts_Over_Social_Media"] = data["Conflicts_Over_Social_Media"].map({"Yes":1,"No":0})
 
-    X = data[[
-        "Avg_Daily_Usage_Hours",
-        "Sleep_Hours_Per_Night",
-        "Affects_Academic_Performance",
-        "Conflicts_Over_Social_Media"
-    ]]
+        X = data[[
+            "Avg_Daily_Usage_Hours",
+            "Sleep_Hours_Per_Night",
+            "Affects_Academic_Performance",
+            "Conflicts_Over_Social_Media"
+        ]]
 
-    # Support multiple possible target column names
-    if "Addicted" in data.columns:
-        y = data["Addicted"]
-    elif "High_Risk" in data.columns:
-        y = data["High_Risk"]
-    elif "Addicted_Score" in data.columns:
-        y = (data["Addicted_Score"] >= 8).astype(int)
-    else:
-        raise KeyError("No target column found in dataset")
+        # Support multiple possible target column names
+        if "Addicted" in data.columns:
+            y = data["Addicted"]
+        elif "High_Risk" in data.columns:
+            y = data["High_Risk"]
+        elif "Addicted_Score" in data.columns:
+            y = (data["Addicted_Score"] >= 8).astype(int)
+        else:
+            raise KeyError("No target column found in dataset")
 
-    y_pred = model.predict(X)
+        y_pred = model.predict(X)
 
-    cm = confusion_matrix(y, y_pred)
-    # Calculate accuracy from confusion matrix
-    accuracy = (cm[0][0] + cm[1][1]) / cm.sum()
-    st.write(f"Model Accuracy: {round(accuracy*100,2)}%")
+        cm = confusion_matrix(y, y_pred)
+        # Calculate accuracy from confusion matrix
+        accuracy = (cm[0][0] + cm[1][1]) / cm.sum()
+        st.write(f"Model Accuracy: {round(accuracy*100,2)}%")
 
-    fig2, ax2 = plt.subplots()
-    ax2.imshow(cm, cmap="Blues")
+        fig2, ax2 = plt.subplots()
+        ax2.imshow(cm, cmap="Blues")
 
-    ax2.set_xlabel("Predicted")
-    ax2.set_ylabel("Actual")
+        ax2.set_xlabel("Predicted")
+        ax2.set_ylabel("Actual")
 
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            ax2.text(j, i, int(cm[i, j]), ha="center", va="center",
-                     color="white" if cm[i, j] > cm.max() / 2 else "black")
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                ax2.text(j, i, int(cm[i, j]), ha="center", va="center",
+                         color="white" if cm[i, j] > cm.max() / 2 else "black")
 
-    st.pyplot(fig2)
-except Exception as e:
-    st.info(f"Could not compute confusion matrix: {e}")
+        st.pyplot(fig2)
+    except Exception as e:
+        st.info(f"Could not compute confusion matrix: {e}")
