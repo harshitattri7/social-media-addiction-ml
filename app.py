@@ -218,7 +218,24 @@ with col2:
     st.subheader("Confusion Matrix")
 
     try:
-        data = pd.read_csv("Students Social Media Addiction.csv")
+        # Try multiple possible paths for the CSV file
+        csv_paths = [
+            "Students Social Media Addiction.csv",
+            "data/raw/Students Social Media Addiction.csv",
+            "./data/raw/Students Social Media Addiction.csv"
+        ]
+        
+        data = None
+        for path in csv_paths:
+            try:
+                data = pd.read_csv(path)
+                break
+            except FileNotFoundError:
+                continue
+        
+        if data is None:
+            st.error("❌ Dataset not found. Please ensure the CSV file is in the repo.")
+            st.stop()
 
         data["Affects_Academic_Performance"] = data["Affects_Academic_Performance"].map({"Yes":1,"No":0})
         data["Conflicts_Over_Social_Media"] = data["Conflicts_Over_Social_Media"].map({"Yes":1,"No":0})
