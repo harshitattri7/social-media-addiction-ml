@@ -15,138 +15,122 @@ st.set_page_config(page_title="Social Media Addiction Risk Assessment")
 st.title("📱 Social Media Addiction Risk Assessment")
 st.write("Answer honestly to assess your behavioral risk.")
 
-# organize content into tabs
-# apply CSS to make the Model Insights tab stand out
-st.markdown(
-    """
-    <style>
-    /* highlight second tab label so it pops */
-    div[data-testid="stTabs"] button:nth-child(2) {
-      color: #ff6347;            /* tomato color */
-      font-weight: bold;
-      border-bottom: 2px solid #ff6347;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
+# risk assessment inputs
+# Inputs
+usage = st.slider("Hours per day on social media", 0.0, 12.0, 4.0)
+sleep = st.slider("Hours of sleep per night", 3.0, 10.0, 7.0)
+
+academic_choice = st.selectbox(
+    "Has social media negatively affected your academic performance?",
+    ["Yes", "No"]
 )
-tab1, tab2 = st.tabs(["🔍 Risk Assessment", "📊 Model Insights"])
-with tab1:
-    # Inputs
-    usage = st.slider("Hours per day on social media", 0.0, 12.0, 4.0)
-    sleep = st.slider("Hours of sleep per night", 3.0, 10.0, 7.0)
 
-    academic_choice = st.selectbox(
-        "Has social media negatively affected your academic performance?",
-        ["Yes", "No"]
-    )
+conflicts_choice = st.selectbox(
+    "Have you experienced conflicts because of social media?",
+    ["Yes", "No"]
+)
 
-    conflicts_choice = st.selectbox(
-        "Have you experienced conflicts because of social media?",
-        ["Yes", "No"]
-    )
+# Convert to numeric
+academic = 1 if academic_choice == "Yes" else 0
+conflicts = 1 if conflicts_choice == "Yes" else 0
 
-    # Convert to numeric
-    academic = 1 if academic_choice == "Yes" else 0
-    conflicts = 1 if conflicts_choice == "Yes" else 0
+input_data = pd.DataFrame({
+    "Avg_Daily_Usage_Hours": [usage],
+    "Sleep_Hours_Per_Night": [sleep],
+    "Affects_Academic_Performance": [academic],
+    "Conflicts_Over_Social_Media": [conflicts]
+})
 
-    input_data = pd.DataFrame({
-        "Avg_Daily_Usage_Hours": [usage],
-        "Sleep_Hours_Per_Night": [sleep],
-        "Affects_Academic_Performance": [academic],
-        "Conflicts_Over_Social_Media": [conflicts]
-    })
+if st.button("Check My Risk"):
+    prediction = model.predict(input_data)[0]
+    probability = model.predict_proba(input_data)[0][1]
 
-    if st.button("Check My Risk"):
-        prediction = model.predict(input_data)[0]
-        probability = model.predict_proba(input_data)[0][1]
+    st.subheader("Assessment Result")
+    st.write(f"Risk Probability: {round(probability * 100, 2)}%")
+    st.progress(float(probability))
 
-        st.subheader("Assessment Result")
-        st.write(f"Risk Probability: {round(probability * 100, 2)}%")
-        st.progress(float(probability))
-
-        if prediction == 1:
-            st.error("🔴 High Behavioral Addiction Risk")
-            st.write("### Suggested Actions:")
-            st.write("- Gradually reduce daily usage")
-            st.write("- Avoid late-night scrolling")
-            st.write("- Set app time limits")
-        else:
-            st.success("🟢 Low Risk")
-            st.write("### Maintain healthy digital habits!")
+    if prediction == 1:
+        st.error("🔴 High Behavioral Addiction Risk")
+        st.write("### Suggested Actions:")
+        st.write("- Gradually reduce daily usage")
+        st.write("- Avoid late-night scrolling")
+        st.write("- Set app time limits")
+    else:
+        st.success("🟢 Low Risk")
+        st.write("### Maintain healthy digital habits!")
 
 
-with tab2:
-    # Model Performance section
-    st.markdown("---")
-    st.header("📊 Model Performance & Insights")
 
-    # ---- Feature Importance ----
-    st.subheader("Feature Importance")
+# Model Performance section
+st.markdown("---")
+st.header("📊 Model Performance & Insights")
 
-    feature_names = [
-        "Daily Usage Hours",
-        "Sleep Hours",
-        "Academic Impact",
-        "Social Conflicts"
-    ]
+# ---- Feature Importance ----
+st.subheader("Feature Importance")
 
-    try:
-        importances = model.feature_importances_
+feature_names = [
+    "Daily Usage Hours",
+    "Sleep Hours",
+    "Academic Impact",
+    "Social Conflicts"
+]
 
-        fig1, ax1 = plt.subplots()
-        ax1.barh(feature_names, importances)
-        ax1.set_xlabel("Importance Score")
-        ax1.set_title("Feature Importance")
-        st.pyplot(fig1)
-    except AttributeError:
-        st.info("Model does not expose feature importances.")
-    except Exception as e:
-        st.error(f"Could not display feature importances: {e}")
+try:
+    importances = model.feature_importances_
 
-    st.subheader("Confusion Matrix")
+    fig1, ax1 = plt.subplots()
+    ax1.barh(feature_names, importances)
+    ax1.set_xlabel("Importance Score")
+    ax1.set_title("Feature Importance")
+    st.pyplot(fig1)
+except AttributeError:
+    st.info("Model does not expose feature importances.")
+except Exception as e:
+    st.error(f"Could not display feature importances: {e}")
 
-    try:
-        data = pd.read_csv("Students Social Media Addiction.csv")
+st.subheader("Confusion Matrix")
 
-        data["Affects_Academic_Performance"] = data["Affects_Academic_Performance"].map({"Yes":1,"No":0})
-        data["Conflicts_Over_Social_Media"] = data["Conflicts_Over_Social_Media"].map({"Yes":1,"No":0})
+try:
+    data = pd.read_csv("Students Social Media Addiction.csv")
 
-        X = data[[
-            "Avg_Daily_Usage_Hours",
-            "Sleep_Hours_Per_Night",
-            "Affects_Academic_Performance",
-            "Conflicts_Over_Social_Media"
-        ]]
+    data["Affects_Academic_Performance"] = data["Affects_Academic_Performance"].map({"Yes":1,"No":0})
+    data["Conflicts_Over_Social_Media"] = data["Conflicts_Over_Social_Media"].map({"Yes":1,"No":0})
 
-        # Support multiple possible target column names
-        if "Addicted" in data.columns:
-            y = data["Addicted"]
-        elif "High_Risk" in data.columns:
-            y = data["High_Risk"]
-        elif "Addicted_Score" in data.columns:
-            y = (data["Addicted_Score"] >= 8).astype(int)
-        else:
-            raise KeyError("No target column found in dataset")
+    X = data[[
+        "Avg_Daily_Usage_Hours",
+        "Sleep_Hours_Per_Night",
+        "Affects_Academic_Performance",
+        "Conflicts_Over_Social_Media"
+    ]]
 
-        y_pred = model.predict(X)
+    # Support multiple possible target column names
+    if "Addicted" in data.columns:
+        y = data["Addicted"]
+    elif "High_Risk" in data.columns:
+        y = data["High_Risk"]
+    elif "Addicted_Score" in data.columns:
+        y = (data["Addicted_Score"] >= 8).astype(int)
+    else:
+        raise KeyError("No target column found in dataset")
 
-        cm = confusion_matrix(y, y_pred)
-        # Calculate accuracy from confusion matrix
-        accuracy = (cm[0][0] + cm[1][1]) / cm.sum()
-        st.write(f"Model Accuracy: {round(accuracy*100,2)}%")
+    y_pred = model.predict(X)
 
-        fig2, ax2 = plt.subplots()
-        ax2.imshow(cm, cmap="Blues")
+    cm = confusion_matrix(y, y_pred)
+    # Calculate accuracy from confusion matrix
+    accuracy = (cm[0][0] + cm[1][1]) / cm.sum()
+    st.write(f"Model Accuracy: {round(accuracy*100,2)}%")
 
-        ax2.set_xlabel("Predicted")
-        ax2.set_ylabel("Actual")
+    fig2, ax2 = plt.subplots()
+    ax2.imshow(cm, cmap="Blues")
 
-        for i in range(cm.shape[0]):
-            for j in range(cm.shape[1]):
-                ax2.text(j, i, int(cm[i, j]), ha="center", va="center",
-                         color="white" if cm[i, j] > cm.max() / 2 else "black")
+    ax2.set_xlabel("Predicted")
+    ax2.set_ylabel("Actual")
 
-        st.pyplot(fig2)
-    except Exception as e:
-        st.info(f"Could not compute confusion matrix: {e}")
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax2.text(j, i, int(cm[i, j]), ha="center", va="center",
+                     color="white" if cm[i, j] > cm.max() / 2 else "black")
+
+    st.pyplot(fig2)
+except Exception as e:
+    st.info(f"Could not compute confusion matrix: {e}")
