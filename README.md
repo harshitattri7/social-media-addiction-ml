@@ -1,16 +1,20 @@
 # 📱 Social Media Addiction Risk Prediction
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://social-media-addiction-ml.streamlit.app)
-
 ## 🚀 Project Overview
 
 This project builds a Machine Learning classification model to predict **high social media addiction risk** among students using behavioral and lifestyle indicators.
 
 The goal is to identify high-risk individuals based on academic impact, sleep patterns, mental health score, usage behavior, and relationship factors.
 
-### 🎯 Live Demo
+### 🎯 Run Locally
 
-Click the badge above to launch the interactive Streamlit app and assess your addiction risk!
+To run the interactive Streamlit app locally, use:
+
+```bash
+streamlit run app.py
+```
+
+The app will launch at `http://localhost:8501` and allow you to assess your addiction risk!
 
 ---
 
