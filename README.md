@@ -1,5 +1,7 @@
 # 📱 Social Media Addiction Risk Prediction
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://social-media-addiction-ml.streamlit.app)
+
 ## 🚀 Project Overview
 
 This project builds a Machine Learning classification model to predict **high social media addiction risk** among students using behavioral and lifestyle indicators.
@@ -22,12 +24,12 @@ The app will launch at `http://localhost:8501` and allow you to assess your addi
 
 ### Risk Assessment Interface
 
-![Risk Assessment](./assets/screenshot_risk_assessment.png)
+![Risk Assessment](https://raw.githubusercontent.com/harshitattri7/social-media-addiction-ml/main/assets/screenshot_risk_assessment.png)
 _Main interface with user input sliders and dropdowns, plus sidebar with model information._
 
 ### Model Performance & Insights
 
-![Model Insights](./assets/screenshot_model_insights.png)
+![Model Insights](https://raw.githubusercontent.com/harshitattri7/social-media-addiction-ml/main/assets/screenshot_model_insights.png)
 _Feature importance chart and confusion matrix displayed side-by-side for model transparency._
 
 ---
